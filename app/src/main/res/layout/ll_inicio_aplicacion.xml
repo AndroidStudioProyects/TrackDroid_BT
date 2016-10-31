@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.giovanazzi.trackdroid_bt.ll_inicio_aplicacion">
+
+    <TextView
+        android:text="Aplicacion Principal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_relay1"
+        android:layout_below="@+id/textView2"
+        android:layout_alignParentStart="true" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_relay4"
+        android:layout_below="@+id/tb_relay1"
+        android:layout_alignParentStart="true" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_relay5"
+        android:layout_below="@+id/tb_relay2"
+        android:layout_alignStart="@+id/tb_relay2" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_relay6"
+        android:layout_below="@+id/tb_relay3"
+        android:layout_alignStart="@+id/tb_relay3" />
+
+    <Button
+        android:text="Display"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_Display"
+        android:layout_below="@+id/tb_relay4"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="12dp"
+        android:layout_alignEnd="@+id/textView4" />
+
+    <TextView
+        android:text="Recepcion de Datos:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/textView4"
+        android:layout_below="@+id/btn_GrabarConfiguracion"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="---------"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_rxDatos"
+        android:layout_marginTop="21dp"
+        android:layout_below="@+id/textView4"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="21dp" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_relay2"
+        android:layout_below="@+id/textView2"
+        android:layout_alignStart="@+id/btn_LoadConfRem" />
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_relay3"
+        android:layout_marginStart="12dp"
+        android:layout_below="@+id/textView2"
+        android:layout_toEndOf="@+id/tb_relay5" />
+
+    <Button
+        android:text="Configuracion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_Configuracion"
+        android:layout_alignTop="@+id/btn_GrabarConfiguracion"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_GrabarConfiguracion"
+        android:text="Grabar Conf"
+        android:layout_marginTop="18dp"
+        android:layout_below="@+id/btn_LoadConfRem"
+        android:layout_toEndOf="@+id/btn_Configuracion"
+        android:layout_marginStart="12dp" />
+
+    <Button
+        android:text="Leer Conf Rem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_LoadConfRem"
+        android:layout_alignBaseline="@+id/btn_Display"
+        android:layout_alignBottom="@+id/btn_Display"
+        android:layout_alignStart="@+id/btn_GrabarConfiguracion" />
+</RelativeLayout>
