@@ -10,12 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.giovanazzi.trackdroid_bt.ll_inicio_aplicacion">
 
-    <TextView
-        android:text="Aplicacion Principal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2" />
-
     <ToggleButton
         android:text="ToggleButton"
         android:layout_width="wrap_content"
@@ -81,14 +75,6 @@
         android:text="ToggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tb_relay2"
-        android:layout_below="@+id/textView2"
-        android:layout_alignStart="@+id/btn_LoadConfRem" />
-
-    <ToggleButton
-        android:text="ToggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/tb_relay3"
         android:layout_marginStart="12dp"
         android:layout_below="@+id/textView2"
@@ -120,4 +106,77 @@
         android:layout_alignBaseline="@+id/btn_Display"
         android:layout_alignBottom="@+id/btn_Display"
         android:layout_alignStart="@+id/btn_GrabarConfiguracion" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txt_rxDatos"
+        android:layout_alignParentStart="true">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:layout_weight="1" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView9"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <ToggleButton
+        android:text="ToggleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tb_relay2"
+        android:layout_below="@+id/textView2"
+        android:layout_toEndOf="@+id/tb_relay1"
+        android:layout_marginStart="15dp" />
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tb_relay1"
+        android:layout_alignEnd="@+id/tb_relay1">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </TableLayout>
+
+    <TextView
+        android:text="Aplicacion Principal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_alignParentTop="true"
+        android:layout_alignEnd="@+id/btn_LoadConfRem" />
+
+    <Button
+        android:text="prueba"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_prueba"
+        android:layout_alignBaseline="@+id/textView4"
+        android:layout_alignBottom="@+id/textView4"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="17dp"
+        android:elevation="0dp" />
 </RelativeLayout>

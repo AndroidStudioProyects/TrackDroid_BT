@@ -24,6 +24,7 @@
         <activity android:name=".PreferencesActivity" />
         <activity android:name=".Homescreen" />
         <activity android:name=".Configuracion"></activity>
+        <activity android:name=".Activity_Relays"></activity>
     </application>
 
 </manifest>

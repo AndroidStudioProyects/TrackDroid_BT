@@ -90,7 +90,7 @@ public class ll_inicio_aplicacion extends Activity {
 
 
 	ToggleButton tb_relay1,tb_relay2,tb_relay3,tb_relay4,tb_relay5,tb_relay6;
-	Button btn_LeerConfigRemota,btn_GrabarConfiguracion;
+	Button btn_LeerConfigRemota,btn_GrabarConfiguracion,btn_Display,btn_prueba;
 	TextView txt_RxDatos;
 
 	@Override
@@ -137,18 +137,37 @@ public class ll_inicio_aplicacion extends Activity {
 
 		btn_LeerConfigRemota=(Button)findViewById(R.id.btn_LoadConfRem);
 		btn_GrabarConfiguracion=(Button)findViewById(R.id.btn_GrabarConfiguracion);
+		btn_Display=(Button)findViewById(R.id.btn_Display);
+		btn_prueba=(Button)findViewById(R.id.btn_prueba);
 
 		txt_RxDatos=(TextView)findViewById(R.id.txt_rxDatos);
 	}
 
 	private void Botones() {
 
+		btn_prueba.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intento= new Intent(getApplicationContext(),Activity_Relays.class);
+				startActivity(intento);
+
+			}
+		});
+
+		btn_Display.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FuncionEnviar("777");
+
+			}
+		});
+
 		btn_LeerConfigRemota.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				FuncionEnviar("000");
 				DialogoCargaConfiguracion();
-				Toast.makeText(getApplicationContext(), "Comando: 000", Toast.LENGTH_SHORT).show();
+
 			}
 		});
 
@@ -156,7 +175,7 @@ public class ll_inicio_aplicacion extends Activity {
 			@Override
 			public void onClick(View v) {
 				FuncionEnviar("999");
-				Toast.makeText(getApplicationContext(), "Comando: 999", Toast.LENGTH_SHORT).show();
+
 			}
 		});
 
@@ -165,10 +184,8 @@ public class ll_inicio_aplicacion extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					FuncionEnviar("101");
-					Toast.makeText(getApplicationContext(), "Comando: 101", Toast.LENGTH_SHORT).show();
 				}else{
 					FuncionEnviar("100");
-					Toast.makeText(getApplicationContext(), "Comando: 100", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -178,10 +195,8 @@ public class ll_inicio_aplicacion extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					FuncionEnviar("201");
-					Toast.makeText(getApplicationContext(), "Comando: 201", Toast.LENGTH_SHORT).show();
 				}else{
 					FuncionEnviar("200");
-					Toast.makeText(getApplicationContext(), "Comando: 200", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -190,10 +205,8 @@ public class ll_inicio_aplicacion extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					FuncionEnviar("301");
-					Toast.makeText(getApplicationContext(), "Comando: 301", Toast.LENGTH_SHORT).show();
 				}else{
 					FuncionEnviar("300");
-					Toast.makeText(getApplicationContext(), "Comando: 300", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -202,10 +215,8 @@ public class ll_inicio_aplicacion extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					FuncionEnviar("401");
-					Toast.makeText(getApplicationContext(), "Comando: 401", Toast.LENGTH_SHORT).show();
-				}else{
+					}else{
 					FuncionEnviar("400");
-					Toast.makeText(getApplicationContext(), "Comando: 400", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -214,10 +225,8 @@ public class ll_inicio_aplicacion extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					FuncionEnviar("501");
-					Toast.makeText(getApplicationContext(), "Comando: 501", Toast.LENGTH_SHORT).show();
 				}else{
 					FuncionEnviar("500");
-					Toast.makeText(getApplicationContext(), "Comando: 500", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -226,10 +235,8 @@ public class ll_inicio_aplicacion extends Activity {
 			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 				if(isChecked){
 					FuncionEnviar("601");
-					Toast.makeText(getApplicationContext(), "Comando: 601", Toast.LENGTH_SHORT).show();
 				}else{
 					FuncionEnviar("600");
-					Toast.makeText(getApplicationContext(), "Comando: 600", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
