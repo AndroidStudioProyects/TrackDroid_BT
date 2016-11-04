@@ -9,45 +9,32 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.UUID;
 
 public class ll_inicio_aplicacion extends Activity {
-	
-	public static final String DEVICE_EXTRA = "com.blueserial.SOCKET";
-	public static final String DEVICE_UUID = "com.blueserial.uuid";
-	public static final String BUFFER_SIZE = "com.blueserial.buffersize";
-	
+
+
 	public static final String TAG = "ISITE PROYECTO";
-	public int mMaxChars   = 50000;//Default
+	public int mMaxChars   = 50000;
 
 	public BluetoothSocket mBTSocket;
 	public ReadInput mReadThread = null;
 
 	public boolean mIsUserInitiatedDisconnect = false;
-	public Boolean Apuntamiento=false,Booteo=true,Habilitacion=false;
+	public Boolean Habilitacion=false;
 
 	public UUID mDeviceUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB"); // Standard SPP UUID
-	
-	public int mBufferSize = 50000; //Default
 
-	public Float NivelGlobal;
-	public int NivelGlobalInt=0;
 	public String strInputGlobal="";
 	public boolean mIsBluetoothConnected = false;
 
@@ -55,39 +42,20 @@ public class ll_inicio_aplicacion extends Activity {
 
 	//////////////////////////////////////////////////////////////////
 	// dialogos en progreso
-	public ProgressBar progressBarBoot;
-	public ProgressDialog progressDialog,dialogoCargaConfiguracion,progressDialogOPT;
+
+	public ProgressDialog progressDialog,dialogoCargaConfiguracion;
 
 
-	public Button btn_Prueba,btn_RestaurarOPT,btn_Led,btn_EnviarOPT,btn_exit,btn_Ingresar,btn_Cargar_OPT,btn_SetFreq,btn_Reset,btn_Browser,btn_SetPower;
-	public ToggleButton TB_Login,TB_CwOnOff,TB_Pointing;
-	public TextView  Text_lineas,Text_Log,Text_Path,TextPointing,TextPrueba,TextNivel,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
+	public Button btn_EnviarOPT,btn_exit,btn_Ingresar,btn_SetFreq,btn_Browser,btn_SetPower;
+	public ToggleButton TB_CwOnOff,TB_Pointing;
+	public TextView  Text_Log,Text_Serial,Text_Modelo,Text_Firmware,Text_VersionLinux;
 
 	public String password;
-	// hilos
-	
-	public Handler puente;
-	//public VentanaDialogoNivel DialogoNivel;
-	public Boolean Lectura_pointing=false,boolPassword=true, telnet=true;
-	
-	public Thread th1,thOpt;
-	//private asincOPT asinc;
-	//private MedirNivelSenal asincMedirNivel;
-	////// opt 
-	static char finCadena=0x03;
-	
-	private static final int REQUEST_PATH = 1;
-	 
-	String curFileName,curFilePath;
-	
-	EditText EditPath;
+
+	public Boolean boolPassword=true, telnet=true;
 	
 
-	 static String p,StringRecepcion;
-	 String[] CadenaPartida;
-	 int longitudArchivo;
-
-
+	 static String StringRecepcion;
 
 	ToggleButton tb_relay1,tb_relay2,tb_relay3,tb_relay4,tb_relay5,tb_relay6;
 	Button btn_LeerConfigRemota,btn_GrabarConfiguracion,btn_Display,btn_prueba;
@@ -109,10 +77,50 @@ public class ll_inicio_aplicacion extends Activity {
 
 
 		}
-	
-	/////////////// Dialogos /////////////////////////////////
 
-	private void DialogoCargaConfiguracion(){
+    @Override
+    protected void onPause() {
+        if (mBTSocket != null && mIsBluetoothConnected) {
+            //	new DisConnectBT().execute();
+        }
+        Log.d(TAG, "Paused");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        if (mBTSocket == null || !mIsBluetoothConnected) {
+            new ConnectBT().execute();
+        }
+        Log.d(TAG, "Resumed");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        if (mBTSocket != null && mIsBluetoothConnected) {
+            new DisConnectBT().execute();
+        }
+        Log.d(TAG, "Stopped");
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mBTSocket != null && mIsBluetoothConnected) {
+            new DisConnectBT().execute();
+        }
+        Log.d(TAG, "Stopped");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // TODO Auto-generated method stub
+        super.onSaveInstanceState(outState);
+    }
+
+    private void DialogoCargaConfiguracion(){
 
 		dialogoCargaConfiguracion = new ProgressDialog(ll_inicio_aplicacion.this);
 		dialogoCargaConfiguracion.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -121,10 +129,6 @@ public class ll_inicio_aplicacion extends Activity {
 		dialogoCargaConfiguracion.show();
 
 	}
-
-
-////////////////// Fin Dialogos ////////////////////////////////
-
 
 	private void  LevantarXML() {
 
@@ -137,7 +141,7 @@ public class ll_inicio_aplicacion extends Activity {
 
 		btn_LeerConfigRemota=(Button)findViewById(R.id.btn_LoadConfRem);
 		btn_GrabarConfiguracion=(Button)findViewById(R.id.btn_GrabarConfiguracion);
-		btn_Display=(Button)findViewById(R.id.btn_Display);
+		btn_Display=(Button)findViewById(R.id.btn_Disp);
 		btn_prueba=(Button)findViewById(R.id.btn_prueba);
 
 		txt_RxDatos=(TextView)findViewById(R.id.txt_rxDatos);
@@ -242,7 +246,8 @@ public class ll_inicio_aplicacion extends Activity {
 		});
 	}
 
-	////////////// FUNCION PARA ENVIAR ///////////////////
+
+    ////////////// FUNCION PARA ENVIAR ///////////////////
 	
 	public void FuncionEnviar(String StringEnviado){
 		
@@ -480,80 +485,9 @@ public class ll_inicio_aplicacion extends Activity {
 	}
 
 	////////////***   Bluetooth    INICIO ******///////////////////////////////
-	
-	public class DisConnectBT extends AsyncTask<Void, Void, Void> {
 
-		@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-
-			if (mReadThread != null) {
-				mReadThread.stop();
-				while (mReadThread.isRunning())
-					; // Wait until it stops
-				mReadThread = null;
-
-			}
-
-			try {
-				mBTSocket.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-			mIsBluetoothConnected = false;
-			if (mIsUserInitiatedDisconnect) {
-				finish();
-			}
-		}
-
-	}
-	
 	public void msg(String s) {
 		Toast.makeText(getApplicationContext(), s, Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
-	protected void onPause() {
-		if (mBTSocket != null && mIsBluetoothConnected) {
-			new DisConnectBT().execute();
-		}
-		Log.d(TAG, "Paused");
-		super.onPause();
-	}
-
-	@Override
-	protected void onResume() {
-		if (mBTSocket == null || !mIsBluetoothConnected) {
-			new ConnectBT().execute();
-		}
-		Log.d(TAG, "Resumed");
-		super.onResume();
-	}
-
-	@Override
-	protected void onStop() {
-		if (mBTSocket != null && mIsBluetoothConnected) {
-			new DisConnectBT().execute();
-		}
-		Log.d(TAG, "Stopped");
-		super.onStop();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		// TODO Auto-generated method stub
-		super.onSaveInstanceState(outState);
 	}
 
 	public class ConnectBT extends AsyncTask<Void, Void, Void> {
@@ -603,15 +537,53 @@ public class ll_inicio_aplicacion extends Activity {
 		}
 	}
 
-	public class ReadInput implements Runnable {
+    public class DisConnectBT extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            if (mReadThread != null) {
+                mReadThread.stop();
+                while (mReadThread.isRunning())
+                    ; // Wait until it stops
+                mReadThread = null;
+
+            }
+
+            try {
+                mBTSocket.close();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            mIsBluetoothConnected = false;
+            if (mIsUserInitiatedDisconnect) {
+                finish();
+            }
+        }
+
+    }
+
+    public class ReadInput implements Runnable {
 
 		private boolean bStop = false;
 		private Thread t;
 
-		public ReadInput() {
-			t = new Thread(this, "Input Thread");
-			t.start();
-		}
+		    public ReadInput() {
+			    t = new Thread(this, "Input Thread");
+			    t.start();
+		    }
 
 		public boolean isRunning() {
 			return t.isAlive();
@@ -627,16 +599,12 @@ public class ll_inicio_aplicacion extends Activity {
 					byte[] buffer = new byte[256];
 					if (inputStream.available() > 0) {
 						inputStream.read(buffer);
-						int i = 0;
+						int i ;
 						for (i = 0; i < buffer.length && buffer[i] != 0; i++) {
 						}
 						final String strInput = new String(buffer, 0, i);
 						strInputGlobal=strInput;
-
-
-
-
-						FuncionDetectarComando(strInputGlobal,Habilitacion);
+                        FuncionDetectarComando(strInputGlobal,Habilitacion);
 						Log.d("entrada de dato", strInput);
 						}
 					Thread.sleep(500);
@@ -656,307 +624,7 @@ public class ll_inicio_aplicacion extends Activity {
 
 	}
 
-	////////////***   Bluetooth    FIN ******///////////////////////////////
 
-/*
-    public class VentanaDialogoNivel extends AsyncTask<Void, Void, Void> {
-
-	@Override
-		protected void onPreExecute() {
-		}
-
-		@Override
-		protected Void doInBackground(Void... devices) {
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-
-			String[] NivelesAlmacenados = strInputGlobal.split("\r");
-
-			try {
-				float nivelFlotante= Float.parseFloat(NivelesAlmacenados[0])*100;
-				int NivelBaliza=(int)nivelFlotante;
-
-				TextNivel.setText("Nivel= -"+NivelBaliza+" dbm");
-
-			} catch (Exception e) {
-
-				TextNivel.setText("Error en la medicion");
-			}
-
-			strInputGlobal="";
-		}
-
-	}
-
-
-    public class MedirNivelSenal extends AsyncTask<Void, Void, Void> {
-
-		@Override
-		protected void onPreExecute() {
-
-			  Toast.makeText(getApplicationContext(), "Comienza la medici�n", Toast.LENGTH_SHORT).show();
-
-		}
-
-		@Override
-		protected Void doInBackground(Void... params) {
-
-			while(!isCancelled()){
-			try {
-				Thread.sleep(1500);
-				FuncionEnviar("rx power");
-
-			} catch (Exception e) {
-				// TODO: handle exception
-			}
-
-
-
-			}
-			return null;
-
-		}
-
-		protected void onProgressUpdate(String progreso) {
-
-		}
-		@Override
-		protected void onPostExecute(Void result) {
-		//	TextNivel.setText("0 dbm");
-			}
-
-		@Override
-		protected void onCancelled(Void result) {
-
-			  Toast.makeText(getApplicationContext(), "Medicion Cancelada", Toast.LENGTH_SHORT).show();
-
-
-		}
-	}
-
-*/
-public void Hilo() {
-		Log.d("Hilo", "th1 = new Thread(new Runnable()");
-		th1 = new Thread(new Runnable() {
-
-
-            @Override
-            public void run() {
-            	 runOnUiThread(new Runnable() {
-            	        public void run() {
-            	    	progressDialog = new ProgressDialog(ll_inicio_aplicacion.this);
-            	    		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            	    		progressDialog.setMessage("Esperando medicion del Equipo...");
-            	    		progressDialog.setMax(10);
-            	    		progressDialog.setProgress(0);
-            	    		progressDialog.setCancelable(false);
-            	    		progressDialog.show();
-            	        }
-            	    });
-
-
-            	try {
-            		Log.d("Hilo", "th1 = Thread.sleep(11000)");
-
-            		Thread.sleep(12000);
-            		progressDialog.cancel();
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-
-
-
-            	while(Lectura_pointing){
-            		Log.d("Hilo", "while");
-           try {
-            	Thread.sleep(1000);
-				Log.d("Hilo", "DialogoNivel.execute()");
-				//DialogoNivel= new VentanaDialogoNivel();
-				//DialogoNivel.execute();
-
-			} catch (InterruptedException e) {
-				Lectura_pointing=false;
-				e.printStackTrace();
-			}
-            	}
-            	FuncionEnviar("tx iflDC on");
-
-            }
-          });
-		}
-
-	//////////////////////// cargar opt
-	// Listen for results.
-/*
-	private class asincOPT extends AsyncTask<Void, Void, Void>{
-
-		@Override
-        protected void onPreExecute() {
-			Toast.makeText(getApplicationContext(), "comienza hilo", Toast.LENGTH_SHORT);
-			Text_Path.setText("El OPT fue seleccionado.");
-        	FuncionEnviar("cd /etc/idirect/falcon");
-
-        	FuncionEnviar("cat>falcon.opt");
-			progressDialogOPT = new ProgressDialog(ll_inicio_aplicacion.this);
-			progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			progressDialogOPT.setMessage("Cargando OPT");
-			progressDialogOPT.setMax(longitudArchivo);
-			progressDialogOPT.setProgress(0);
-			progressDialogOPT.setCancelable(false);
-			progressDialogOPT.show();
-			Text_lineas.setText("El archvo tiene "+longitudArchivo+" lineas a Transmitir");
-
-            }
-
-		@Override
-		protected Void doInBackground(Void... params) {
-			for(int i=0;i<longitudArchivo;i++){
-				FuncionEnviar(CadenaPartida[i]);
-				try {
-					Thread.sleep(5);
-					onProgressUpdate(i);
-
-				} catch (Exception e) {
-					// TODO: handle exception
-				}
-			}
-
-			 FuncionEnviar(""+finCadena);
- 				 FuncionEnviar("service idirect_falcon restart");
-
-			return null;
-		}
-
-		protected void onProgressUpdate(int progreso) {
-	              progressDialogOPT.setProgress(progreso);
-	        }
-
-		@Override
-		protected void onPostExecute(Void unVoid){
-			Log.d("ASINC", "onPostExecute ");
-			progressDialogOPT.dismiss();
-			btn_RestaurarOPT.setEnabled(true);
-			btn_EnviarOPT.setEnabled(false);
-
-
-		}
-
-	}
-
-	public void HiloOPT() {
-		Log.d("HiloOPT", "hilo opete");
-		thOpt = new Thread(new Runnable() {
-
-
-          @Override
-            public void run() {
-            	 runOnUiThread(new Runnable() {
-            	        public void run() {
-
-            	        	Text_Path.setText("El OPT fue seleccionado.");
-            	        	 FuncionEnviar("cd /etc/idirect_falcon");
-            	        	 FuncionEnviar("cat>falcon.opt");
-            	        	progressDialogOPT = new ProgressDialog(ll_inicio_aplicacion.this);
-            				progressDialogOPT.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            				progressDialogOPT.setMessage("Cargando OPT");
-            				progressDialogOPT.setMax(longitudArchivo);
-            				progressDialogOPT.setProgress(0);
-            				progressDialogOPT.setCancelable(false);
-            				progressDialogOPT.show();
-            				Text_lineas.setText("El archvo tiene "+longitudArchivo+" lineas a Transmitir");
-                			for(int i=0;i<longitudArchivo;i++){
-                				FuncionEnviar(CadenaPartida[i]);
-
-                				try {
-									Thread.sleep(20);
-								//	progressDialogOPT.incrementProgressBy(i);
-								} catch (Exception e) {
-									// TODO: handle exception
-								}
-              			}
-                			 FuncionEnviar(""+finCadena);
-                			 FuncionEnviar("service idirect_falcon restart");
-            	        }
-            	    });
-            }
-          });
-		}
-*/
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        // See which child activity is calling us back.
-    	if (requestCode == REQUEST_PATH){
-    		if (resultCode == RESULT_OK) {
-    			curFileName = data.getStringExtra("GetFileName");
-    			curFilePath = data.getStringExtra("GetPath");
-    			Text_Path.setText(curFilePath+"/"+curFileName);
-
-    			/////////// carga opt
-    			Log.d("OPT", "boton opt");
-
-				p=LeerArchivo(Text_Path.getText().toString());
-
-				CadenaPartida = p.split("\n");
-				longitudArchivo=CadenaPartida.length;
-
-				Log.d("OPT", "lineas= "+longitudArchivo);
-
-				for(int i=0;i<longitudArchivo;i++){
-					Log.d("OPT cargado: ",CadenaPartida[i]);
-				}
-				//FuncionEnviar("exit");// para ir a linux
-				Habilitacion=false;
-				btn_EnviarOPT.setEnabled(true);
-
-    		}
-    	 }
-    }
-
-    public static String LeerArchivo(String nombre)
-    //El parametro nombre indica el nombre del archivo por ejemplo "prueba.txt"
-	{
-
-	try{
-		File f;
-		FileReader lectorArchivo;
-		//Creamos el objeto del archivo que vamos a leer
-		f = new File(nombre);
-		//Creamos el objeto FileReader que abrira el flujo(Stream) de datos para realizar la lectura
-		lectorArchivo = new FileReader(f);
-
-		//Creamos un lector en buffer para recopilar datos a travez del flujo "lectorArchivo" que hemos creado
-		BufferedReader br = new BufferedReader(lectorArchivo);
-
-		String l="";
-		//Esta variable "l" la utilizamos para guardar mas adelante toda la lectura del archivo
-
-		String aux="";/*variable auxiliar*/
-
-		while(true)
-			//este ciclo while se usa para repetir el proceso de lectura, ya que se lee solo 1 linea de texto a la vez
-		{
-			aux=br.readLine();
-			//leemos una linea de texto y la guardamos en la variable auxiliar
-			if(aux!=null)
-				l=l+aux+"\n";
-			/*si la variable aux tiene datos se va acumulando en la variable l,
-			 * en caso de ser nula quiere decir que ya nos hemos leido todo
-			 * el archivo de texto*/
-			else
-				break;
-		}
-		br.close();
-		lectorArchivo.close();
-		return l;
-		}catch(IOException e){
-		System.out.println("Error:"+e.getMessage());
-		}
-		return null;
-		}
-	
  	}
 	
 	

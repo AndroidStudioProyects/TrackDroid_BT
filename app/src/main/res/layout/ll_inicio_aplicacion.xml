@@ -46,7 +46,7 @@
         android:text="Display"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_Display"
+        android:id="@+id/btn_Disp"
         android:layout_below="@+id/tb_relay4"
         android:layout_alignParentStart="true"
         android:layout_marginTop="12dp"
@@ -87,25 +87,6 @@
         android:id="@+id/btn_Configuracion"
         android:layout_alignTop="@+id/btn_GrabarConfiguracion"
         android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_GrabarConfiguracion"
-        android:text="Grabar Conf"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/btn_LoadConfRem"
-        android:layout_toEndOf="@+id/btn_Configuracion"
-        android:layout_marginStart="12dp" />
-
-    <Button
-        android:text="Leer Conf Rem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_LoadConfRem"
-        android:layout_alignBaseline="@+id/btn_Display"
-        android:layout_alignBottom="@+id/btn_Display"
-        android:layout_alignStart="@+id/btn_GrabarConfiguracion" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -179,4 +160,23 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="17dp"
         android:elevation="0dp" />
+
+    <Button
+        android:text="Leer Conf Rem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_LoadConfRem"
+        android:layout_alignBaseline="@+id/btn_Disp"
+        android:layout_alignBottom="@+id/btn_Disp"
+        android:layout_alignStart="@+id/btn_GrabarConfiguracion" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_GrabarConfiguracion"
+        android:text="Grabar Conf"
+        android:layout_marginTop="18dp"
+        android:layout_marginStart="14dp"
+        android:layout_below="@+id/btn_LoadConfRem"
+        android:layout_toEndOf="@+id/btn_Configuracion" />
 </RelativeLayout>

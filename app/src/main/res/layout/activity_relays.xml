@@ -29,11 +29,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView12" />
+
             <ToggleButton
                 android:text="ToggleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/toggleButton26" />
+                android:id="@+id/tb_Relay1" />
 
         </LinearLayout>
 
@@ -47,6 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
+
             <ToggleButton
                 android:text="ToggleButton"
                 android:layout_width="match_parent"
@@ -239,21 +241,21 @@
             android:text="estado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_Leer"
+            android:id="@+id/btn_Estado"
             android:layout_weight="1" />
 
         <Button
             android:text="display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button4"
+            android:id="@+id/btn_Disp"
             android:layout_weight="1" />
 
         <Button
             android:text="config"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button5"
+            android:id="@+id/btn_Config"
             android:layout_weight="1" />
     </LinearLayout>
 
